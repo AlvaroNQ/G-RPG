@@ -21,11 +21,12 @@ int main(int argc, char* args[])
 
 	RenderWindow window("GAME v1.0", 1280, 720);
 
-	SDL_Texture* grassTexture = window.loadTexture("src/gfx/ground_grass_1.png");
-	SDL_Texture* skyTexture = window.loadTexture("src/gfx/sky_1.bmp");
+	SDL_Texture* grassTexture = window.loadTexture("src/gfx/dirt_grass_00.bmp");
+	SDL_Texture* dirtTexture = window.loadTexture("src/gfx/dirt_00.bmp");
+	SDL_Texture* skyTexture = window.loadTexture("src/gfx/sky_00.bmp");
 
     Entity entities[HEIGHT][WIDTH];
-
+    Entity cameraGuy = Entity(Vector2f(0, 0), NULL);
     //std::vector<Entity> entitiees = {Entity(Vector2f(0, 0), grassTexture),
     //                      			 Entity(Vector2f(33, 0), grassTexture),
     //                      			 Entity(Vector2f(33, 33), grassTexture),
@@ -46,10 +47,16 @@ int main(int argc, char* args[])
 
 		window.clear();
 
+
+        cameraGuy.pos.y++;
+        cameraGuy.pos.x
+        ++;
+
+
         string FileName = "map00";
         char buf[1000];
         FILE *Myfile;
-        FileName = "C:/Users/alvar/Desktop/C++/Demo/src/worlds/" + FileName + ".txt";
+        FileName = "src/worlds/" + FileName + ".txt";
 
         char FileNameDraft[FileName.size()+1];
         strcpy(FileNameDraft, FileName.c_str());
@@ -60,12 +67,13 @@ int main(int argc, char* args[])
         {
             for(int j=0 ; j<WIDTH ; j++)
             {
+
                 if(buf[j]=='x'){
-                    entities[i][j].Entity2(Vector2f(16 * j, 16 * i), grassTexture);
-                    std::cout << "x ";
+                    entities[i][j].Entity2(Vector2f(32 * j, 32 * i), grassTexture);
+                }else if(buf[j]=='g'){
+                    entities[i][j].Entity2(Vector2f(32 * j, 32 * i), dirtTexture);
                 }else{
-                    entities[i][j].Entity2(Vector2f(16 * j, 16 * i), skyTexture);
-                    std::cout << ". ";
+                    entities[i][j].Entity2(Vector2f(32 * j, 32 * i), skyTexture);
                 }
             }
             std::cout << endl;
@@ -74,11 +82,10 @@ int main(int argc, char* args[])
 
         fclose(Myfile);
 
-        window.render(entities[0][0]);
-
+        //window.render(entities[21][33]);
         for(int i=0 ; i<HEIGHT ; i++){
             for(int j=0 ; j<WIDTH ; j++){
-    			window.render(entities[i][j]);
+    			window.render(entities[i][j], cameraGuy);
             }
         }
 
